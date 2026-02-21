@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
-import { Responsive } from 'react-grid-layout';
-const ResponsiveGridLayout = Responsive;
+import GridLayout, { WidthProvider } from 'react-grid-layout/legacy';
+const ResponsiveGridLayout = WidthProvider(GridLayout);
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import { usePageBlockStore } from '../store/usePageBlockStore';

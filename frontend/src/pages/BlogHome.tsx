@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { usePageBlockStore } from '../store/usePageBlockStore';
 import BlockRenderer from '../components/blocks/BlockRenderer';
-import GridLayout from 'react-grid-layout';
-const ResponsiveGridLayout = GridLayout as any;
+import GridLayout, { WidthProvider } from 'react-grid-layout/legacy';
+const ResponsiveGridLayout = WidthProvider(GridLayout);
 import 'react-grid-layout/css/styles.css';
 import { Link } from 'react-router-dom';
 import * as Feather from 'react-feather';
