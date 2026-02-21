@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { usePageBlockStore } from '../store/usePageBlockStore';
 import BlockRenderer from '../components/blocks/BlockRenderer';
-import GridLayout, { WidthProvider } from 'react-grid-layout/legacy';
-const ResponsiveGridLayout = WidthProvider(GridLayout);
+import ReactGridLayout from 'react-grid-layout';
+import { WidthProvider } from '../utils/WidthProvider';
+const ResponsiveGridLayout = WidthProvider(ReactGridLayout);
 import 'react-grid-layout/css/styles.css';
 import { Link } from 'react-router-dom';
 import * as Feather from 'react-feather';
@@ -40,14 +41,12 @@ const BlogHome: React.FC = () => {
             <div style={{ background: 'rgba(0,0,0,0.1)', borderRadius: '16px', padding: '16px', minHeight: '600px', width: '100%', minWidth: 0 }}>
                 {blocks.length > 0 ? (
                     <ResponsiveGridLayout
-                        {...({
-                            className: "layout",
-                            layout: blocks.map((b: any) => ({ i: b.id, x: b.layout_x || 0, y: b.layout_y || 0, w: b.layout_w || 12, h: b.layout_h || 4, static: true })),
-                            cols: 12,
-                            rowHeight: 40,
-                            isDraggable: false,
-                            isResizable: false
-                        } as any)}
+                        className="layout"
+                        layout={blocks.map((b: any) => ({ i: b.id, x: b.layout_x || 0, y: b.layout_y || 0, w: b.layout_w || 12, h: b.layout_h || 4, static: true }))}
+                        cols={12}
+                        rowHeight={40}
+                        isDraggable={false}
+                        isResizable={false}
                     >
                         {blocks.map(block => (
                             <div key={block.id} style={{ width: '100%', height: '100%' }}>
