@@ -1,0 +1,45 @@
+:root {
+  /* Preset: Midnight Blue */
+  --preset-midnight-blue-primary: #0f172a;
+  --preset-midnight-blue-surface: rgba(30, 41, 59, 0.4);
+  --preset-midnight-blue-text: #f8fafc;
+
+  /* Preset: Aurora Green */
+  --preset-aurora-green-primary: #064e3b;
+  --preset-aurora-green-surface: rgba(6, 95, 70, 0.4);
+  --preset-aurora-green-text: #ecfdf5;
+
+  /* Preset: Sunset Orange */
+  --preset-sunset-orange-primary: #7c2d12;
+  --preset-sunset-orange-surface: rgba(154, 52, 18, 0.4);
+  --preset-sunset-orange-text: #fff7ed;
+
+  /* Preset: Monochrome Glass */
+  --preset-monochrome-glass-primary: #18181b;
+  --preset-monochrome-glass-surface: rgba(39, 39, 42, 0.5);
+  --preset-monochrome-glass-text: #fafafa;
+}
+
+html[data-theme='Midnight Blue'] {
+  --primary-bg: var(--preset-midnight-blue-primary);
+  --surface-color: var(--preset-midnight-blue-surface);
+  --text-color: var(--preset-midnight-blue-text);
+}
+
+html[data-theme='Aurora Green'] {
+  --primary-bg: var(--preset-aurora-green-primary);
+  --surface-color: var(--preset-aurora-green-surface);
+  --text-color: var(--preset-aurora-green-text);
+}
+
+html[data-theme='Sunset Orange'] {
+  --primary-bg: var(--preset-sunset-orange-primary);
+  --surface-color: var(--preset-sunset-orange-surface);
+  --text-color: var(--preset-sunset-orange-text);
+}
+
+html[data-theme='Monochrome Glass'] {
+  --primary-bg: var(--preset-monochrome-glass-primary);
+  --surface-color: var(--preset-monochrome-glass-surface);
+  --text-color: var(--preset-monochrome-glass-text);
+}

@@ -1,0 +1,50 @@
+@import './styles/theme-presets.css';
+
+:root {
+  /* Default fallbacks */
+  --primary-bg: #0f172a;
+  --surface-color: rgba(30, 41, 59, 0.4);
+  --text-color: #f8fafc;
+
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-width: 320px;
+  overflow-x: hidden;
+  color: var(--text-color);
+  background-color: var(--primary-bg);
+  transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glassmorphism Panel Common Utility */
+.glass-panel {
+  background: var(--surface-color);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  color: var(--text-color);
+  transition: border-color 0.3s ease, background-color 0.6s ease;
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Base button reset */
+button {
+  all: unset;
+  cursor: pointer;
+  box-sizing: border-box;
+}
