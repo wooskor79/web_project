@@ -30,7 +30,22 @@ export const usePageBlockStore = create<PageBlockState>((set, get) => ({
         try {
             const res = await fetch(`${API_URL}/api/blocks`, { cache: 'no-store' });
             if (res.ok) {
-                const data = await res.json();
+                const rawData = await res.json();
+                const data = rawData.map((block: any) => {
+                    let parsedContent = block.content_data;
+                    if (typeof parsedContent === 'string') {
+                        try {
+                            parsedContent = JSON.parse(parsedContent);
+                        } catch (e) {
+                            console.error('JSON parse error for block', block.id, e);
+                            parsedContent = {};
+                        }
+                    }
+                    return {
+                        ...block,
+                        content_data: parsedContent || {}
+                    };
+                });
                 set({ blocks: data });
             }
         } catch (error) {
