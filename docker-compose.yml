@@ -43,6 +43,7 @@ services:
       - PMA_PORT=3306
       - PMA_USER=root
       - PMA_PASSWORD=rootpassword
+      - PMA_ABSOLUTE_URI=http://localhost:3000/phpmyadmin/
     ports:
       - "8080:80"
     depends_on:
