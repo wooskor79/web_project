@@ -1,8 +1,7 @@
+
 import React, { useEffect } from 'react';
-import GridLayout from 'react-grid-layout';
-// @ts-ignore
-import { WidthProvider } from 'react-grid-layout';
-const ResponsiveGridLayout = WidthProvider(GridLayout);
+import { Responsive } from 'react-grid-layout';
+const ResponsiveGridLayout = Responsive;
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import { usePageBlockStore } from '../store/usePageBlockStore';
@@ -27,7 +26,7 @@ const AdminBoard: React.FC = () => {
     const handleAddBlock = (type: BlockType, label: string) => {
         // 디폴트 컨텐츠 세팅
         let defaultContent = {};
-        if (type === 'hero') defaultContent = { title: `새로운 ${label}`, subtitle: '서브 타이틀입니다.', align: 'center' };
+        if (type === 'hero') defaultContent = { title: `새로운 ${label} `, subtitle: '서브 타이틀입니다.', align: 'center' };
         if (type === 'text') defaultContent = { text: '글을 입력하세요...' };
         if (type === 'feature') defaultContent = { title: label, description: '기능을 설명합니다.', iconName: 'Star', imageAlign: 'left' };
         if (type === 'cardgrid') defaultContent = { columns: 3, items: [{ id: '1', title: '항목1', summary: '요약1' }, { id: '2', title: '항목2', summary: '요약2' }] };
