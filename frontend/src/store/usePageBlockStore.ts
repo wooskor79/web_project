@@ -28,7 +28,7 @@ export const usePageBlockStore = create<PageBlockState>((set, get) => ({
     blocks: [],
     fetchBlocks: async () => {
         try {
-            const res = await fetch(`${API_URL}/api/blocks`);
+            const res = await fetch(`${API_URL}/api/blocks`, { cache: 'no-store' });
             if (res.ok) {
                 const data = await res.json();
                 set({ blocks: data });

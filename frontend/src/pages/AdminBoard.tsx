@@ -20,8 +20,17 @@ const AdminBoard: React.FC = () => {
         fetchBlocks();
     }, [fetchBlocks]);
 
+    const [pendingLayouts, setPendingLayouts] = React.useState<any[] | null>(null);
+
     const handleLayoutChange = (layout: any) => {
-        updateLayouts(layout);
+        setPendingLayouts(layout);
+    };
+
+    const handleSaveLayouts = () => {
+        if (pendingLayouts) {
+            updateLayouts(pendingLayouts);
+            setPendingLayouts(null);
+        }
     };
 
     const handleAddBlock = (type: BlockType, label: string) => {
@@ -38,7 +47,7 @@ const AdminBoard: React.FC = () => {
             content_data: defaultContent,
             layout_x: 0,
             layout_y: Infinity,
-            layout_w: 12, // 전체 너비 기본값
+            layout_w: type === 'hero' ? 6 : type === 'text' ? 4 : type === 'feature' ? 4 : type === 'cardgrid' ? 6 : 4, // 전체 너비 대신 적정 사이즈로 축소
             layout_h: type === 'hero' ? 6 : type === 'text' ? 4 : type === 'feature' ? 5 : type === 'cardgrid' ? 6 : 4
         });
     }
@@ -53,6 +62,7 @@ const AdminBoard: React.FC = () => {
 
     const [editingBlock, setEditingBlock] = React.useState<PageBlock | null>(null);
     const [isThemeModalOpen, setIsThemeModalOpen] = React.useState(false);
+    const [deleteTargetId, setDeleteTargetId] = React.useState<string | null>(null);
 
     const handleEditClick = (block: PageBlock) => {
         setEditingBlock(block);
@@ -80,6 +90,14 @@ const AdminBoard: React.FC = () => {
                         onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                     >
                         <Feather.Sliders size={18} /> 디자인/테마
+                    </button>
+                    <button onClick={handleSaveLayouts} style={{
+                        display: 'flex', alignItems: 'center', gap: '8px',
+                        padding: '10px 20px', borderRadius: '8px', background: pendingLayouts ? '#3b82f6' : 'rgba(255,255,255,0.1)', color: 'white',
+                        border: '1px solid rgba(255,255,255,0.2)', fontSize: '14px', fontWeight: 'bold', cursor: pendingLayouts ? 'pointer' : 'default', transition: 'background 0.2s',
+                        opacity: pendingLayouts ? 1 : 0.6
+                    }}>
+                        <Feather.Save size={18} /> 배치 저장 {pendingLayouts && '*'}
                     </button>
                     <Link to="/" style={{ textDecoration: 'none' }}>
                         <button style={{
@@ -149,7 +167,7 @@ const AdminBoard: React.FC = () => {
                                         </button>
                                         <button
                                             className="nodrag"
-                                            onClick={() => deleteBlock(block.id)}
+                                            onClick={() => setDeleteTargetId(block.id)}
                                             style={{
                                                 background: 'rgba(255,50,50,0.6)', borderRadius: '50%',
                                                 padding: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -192,6 +210,34 @@ const AdminBoard: React.FC = () => {
                             <Feather.X size={20} />
                         </button>
                         <ThemeSelector />
+                    </div>
+                </div>
+            )}
+
+            {deleteTargetId && (
+                <div style={{
+                    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, backdropFilter: 'blur(4px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                    <div className="glass-panel" style={{ width: '400px', padding: '32px', textAlign: 'center' }}>
+                        <div style={{ display: 'inline-flex', background: 'rgba(255,50,50,0.2)', padding: '16px', borderRadius: '50%', marginBottom: '24px' }}>
+                            <Feather.AlertTriangle size={32} color="#ff6b6b" />
+                        </div>
+                        <h2 style={{ fontSize: '20px', margin: '0 0 12px 0' }}>블록을 삭제하시겠습니까?</h2>
+                        <p style={{ opacity: 0.8, fontSize: '14px', marginBottom: '32px' }}>
+                            이 작업은 되돌릴 수 없으며, 메인 페이지에서도 즉시 사라집니다.
+                        </p>
+                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                            <button onClick={() => setDeleteTargetId(null)} style={{ padding: '12px 24px', borderRadius: '8px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer', fontWeight: 600 }}>
+                                아니요, 취소합니다
+                            </button>
+                            <button onClick={() => {
+                                deleteBlock(deleteTargetId);
+                                setDeleteTargetId(null);
+                            }} style={{ padding: '12px 24px', borderRadius: '8px', background: '#ff4f4f', border: 'none', color: 'white', cursor: 'pointer', fontWeight: 600 }}>
+                                예, 삭제합니다
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

@@ -1,6 +1,8 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
@@ -27,6 +29,63 @@ pool.getConnection()
     .catch(err => {
         console.error("DB Connection Failed:", err);
     });
+
+const JWT_SECRET = process.env.JWT_SECRET || 'secret_key_for_admin_dashboard_change_it';
+
+// --- Auth API ---
+
+app.get('/api/setup/status', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT COUNT(*) as count FROM admin_users');
+        res.json({ isSetup: rows[0].count > 0 });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/setup', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        if (!username || !password) return res.status(400).json({ error: 'Username and password required.' });
+
+        const [rows] = await pool.query('SELECT COUNT(*) as count FROM admin_users');
+        if (rows[0].count > 0) {
+            return res.status(403).json({ error: 'Admin user already setup.' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await pool.query('INSERT INTO admin_users (username, password_hash) VALUES (?, ?)', [username, hashedPassword]);
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const [rows] = await pool.query('SELECT * FROM admin_users WHERE username = ?', [username]);
+
+        if (rows.length === 0) {
+            return res.status(401).json({ error: 'Invalid credentials.' });
+        }
+
+        const user = rows[0];
+        const isMatch = await bcrypt.compare(password, user.password_hash);
+
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Invalid credentials.' });
+        }
+
+        const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '1d' });
+        res.json({ success: true, token });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// --- Theme & Blocks API ---
 
 app.get('/api/theme', async (req, res) => {
     try {
@@ -87,10 +146,18 @@ app.put('/api/blocks/:id', async (req, res) => {
              layout_w = COALESCE(?, layout_w), 
              layout_h = COALESCE(?, layout_h)
              WHERE id = ?`,
-            [content_data ? JSON.stringify(content_data) : null, layout_x, layout_y, layout_w, layout_h, id]
+            [
+                content_data ? JSON.stringify(content_data) : null,
+                layout_x !== undefined ? layout_x : null,
+                layout_y !== undefined ? layout_y : null,
+                layout_w !== undefined ? layout_w : null,
+                layout_h !== undefined ? layout_h : null,
+                id
+            ]
         );
         res.json({ success: true });
     } catch (err) {
+        console.error("PUT Error:", err);
         res.status(500).json({ error: err.message });
     }
 });

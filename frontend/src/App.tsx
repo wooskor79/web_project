@@ -1,8 +1,16 @@
-import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import BlogHome from './pages/BlogHome';
 import AdminBoard from './pages/AdminBoard';
+import Setup from './pages/Setup';
+import Login from './pages/Login';
 import { useThemeStore } from './store/useThemeStore';
+import { useAuthStore } from './store/useAuthStore';
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
 function App() {
   const { theme, fetchTheme } = useThemeStore();
@@ -51,7 +59,14 @@ function App() {
 
       <Routes>
         <Route path="/" element={<BlogHome />} />
-        <Route path="/admin" element={<AdminBoard />} />
+        <Route path="/setup" element={<Setup />} />
+        <Route path="/setup.php" element={<Navigate to="/setup" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminBoard />
+          </ProtectedRoute>
+        } />
       </Routes>
     </Router>
   );

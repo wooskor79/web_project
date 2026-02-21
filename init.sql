@@ -12,6 +12,14 @@ CREATE TABLE IF NOT EXISTS global_theme (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- 관리자 유저 테이블
+CREATE TABLE IF NOT EXISTS admin_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 초기 테마 설정 시드
 INSERT IGNORE INTO global_theme (id, theme_type, preset_name) VALUES (1, 'preset', 'Midnight Blue');
 
